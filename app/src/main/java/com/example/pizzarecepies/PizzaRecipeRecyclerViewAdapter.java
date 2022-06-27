@@ -16,10 +16,12 @@ public class PizzaRecipeRecyclerViewAdapter extends RecyclerView.Adapter<PizzaRe
 
     private final List<PizzaRecipeModel> data;
     private final Context context;
+    private final PizzaRecipeOnClick onClickHandler;
 
-    public PizzaRecipeRecyclerViewAdapter(Context context, List<PizzaRecipeModel> data) {
+    public PizzaRecipeRecyclerViewAdapter(Context context, List<PizzaRecipeModel> data, PizzaRecipeOnClick onClickHandler) {
         this.context = context;
         this.data = data;
+        this.onClickHandler = onClickHandler;
     }
 
     @NonNull
@@ -28,7 +30,7 @@ public class PizzaRecipeRecyclerViewAdapter extends RecyclerView.Adapter<PizzaRe
         // inflate layout for row
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.pizza_recepie, parent, false);
-        return new PizzaRecipeRecyclerViewAdapter.MyViewHolder(view);
+        return new PizzaRecipeRecyclerViewAdapter.MyViewHolder(view, onClickHandler);
     }
 
     @Override
@@ -49,11 +51,20 @@ public class PizzaRecipeRecyclerViewAdapter extends RecyclerView.Adapter<PizzaRe
         ImageView imageView;
         TextView textView;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, PizzaRecipeOnClick onClickHandler) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.imageView);
             textView = itemView.findViewById(R.id.textView);
+            itemView.setOnClickListener(view -> {
+                if (onClickHandler != null) {
+                    int index = getAdapterPosition();
+
+                    if (index != RecyclerView.NO_POSITION) {
+                        onClickHandler.onItemClick(index);
+                    }
+                }
+            });
         }
     }
 }
